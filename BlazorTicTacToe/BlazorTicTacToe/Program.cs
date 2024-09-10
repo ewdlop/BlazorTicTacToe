@@ -1,5 +1,5 @@
-using BlazorTicTacToe.Client.Pages;
 using BlazorTicTacToe.Components;
+using BlazorTicTacToe.Hubs;
 
 namespace BlazorTicTacToe
 {
@@ -12,6 +12,8 @@ namespace BlazorTicTacToe
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveWebAssemblyComponents();
+
+            builder.Services.AddSignalR();
 
             var app = builder.Build();
 
@@ -31,6 +33,8 @@ namespace BlazorTicTacToe
 
             app.UseStaticFiles();
             app.UseAntiforgery();
+
+            app.MapHub<GameHub>("/gamehub");
 
             app.MapRazorComponents<App>()
                 .AddInteractiveWebAssemblyRenderMode()

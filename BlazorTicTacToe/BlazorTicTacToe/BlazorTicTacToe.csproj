@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\BlazorTicTacToe.Client\Pages\Lobby.razor.cs" Link="Lobby.razor.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BlazorTicTacToe.Client\BlazorTicTacToe.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.5" />
   </ItemGroup>
