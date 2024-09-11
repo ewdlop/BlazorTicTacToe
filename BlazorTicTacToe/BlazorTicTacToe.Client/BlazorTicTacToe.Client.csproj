@@ -14,4 +14,8 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\BlazorTicTacToeShared\BlazorTicTacToeShared.csproj" />
+  </ItemGroup>
+
 </Project>

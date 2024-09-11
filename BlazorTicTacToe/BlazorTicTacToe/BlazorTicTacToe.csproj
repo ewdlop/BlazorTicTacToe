@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\BlazorTicTacToeShared\BlazorTicTacToeShared.csproj" />
     <ProjectReference Include="..\BlazorTicTacToe.Client\BlazorTicTacToe.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.5" />
   </ItemGroup>
