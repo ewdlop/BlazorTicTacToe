@@ -1,12 +1,26 @@
 ﻿@page "/"
 @rendermode @(new InteractiveWebAssemblyRenderMode(false))
 
+<h3>Welcome to Blazor TicTacToe!</h3>
 
-<h3>Lobby</h3>
+@if(_currentRoom is null)
+{
+    
+    <input @bind="_playerName" placeholder="Your Name"/>
+    <input @bind="_currentRoomName" placeholder="Room Name"/>
+    <button @onclick="CreateRoom">Create Room</button>
 
 
-<input @bind="_playerName" placeholder="Your Name"/>
-<input @bind="_currentRoomName" placeholder="Room Name"/>
-<button @onclick="CreateRoom">Create Room</button>
-
-
+    <h3>Rooms:</h3>
+    <ul>
+            @foreach(var r in _rooms)
+            {
+                <li>@r.RoomName <span><button @onclick="() => JoinRoom(r.RoomId)">Join</button></span></li>
+            }        
+    </ul>
+} else
+{
+    <CascadingValue Value="_hubConnection">
+        <Room CurrentRoom="_currentRoom"/>
+    </CascadingValue>
+}

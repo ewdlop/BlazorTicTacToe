@@ -1,0 +1,11 @@
+﻿<h3>Room</h3>
+
+
+@if(CurrentRoom is not null)
+{
+    <h3>@CurrentRoom.RoomName</h3>
+    if(CurrentRoom.Players.Count < 2)
+    {
+        <h4>Waiting for another player to join.</h4>
+    }
+}

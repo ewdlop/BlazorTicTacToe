@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace BlazorTicTacToeShared
 {
-    public class Player
+    public class Player(string connectionId, string name)
     {
+        public string ConnectionId { get; set; } = connectionId;
+        public string Name { get; set; } = name;
     }
 }

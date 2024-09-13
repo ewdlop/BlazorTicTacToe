@@ -8,5 +8,8 @@ namespace BlazorTicTacToeShared
 {
     public class Game
     {
+
+        public string? PlayerXId { get; set; }
+        public string? PlayerOId { get; set; }
     }
 }

@@ -23,6 +23,8 @@ namespace BlazorTicTacToe.Client.Pages
             _hubConnection.On<List<GameRoom>>("Rooms", (roomList) =>
             {
                 Console.WriteLine($"We got rooms! Count = {roomList.Count}");
+                _rooms = roomList;
+                StateHasChanged();
             });
 
             await _hubConnection.StartAsync();
@@ -33,6 +35,23 @@ namespace BlazorTicTacToe.Client.Pages
             if (_hubConnection is null) return;
 
             _currentRoom = await _hubConnection.InvokeAsync<GameRoom>("CreateRoom", _currentRoomName, _playerName);
+            _rooms.Add( _currentRoom );
+            await JoinRoom(_currentRoom.RoomId);
+        }
+
+        private async Task JoinRoom(string roomId)
+        {
+            if(_hubConnection is null) return;
+
+            var joinedRoom = await _hubConnection.InvokeAsync<GameRoom>("JoinRoom", roomId, _playerName);
+
+            if(joinedRoom is not null)
+            {
+                _currentRoom = joinedRoom;
+            } else
+            {
+                Console.WriteLine("Room is full or does not exists");
+            }
         }
     }
 }
