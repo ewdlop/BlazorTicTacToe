@@ -37,5 +37,30 @@ namespace BlazorTicTacToe.Client.Components
 
             await HubConnection.InvokeAsync("StartGame", CurrentRoom.RoomId);
         }
+
+        private async Task MakeMove(int row, int col)
+        {
+
+            if(IsMyTurn() 
+                && CurrentRoom is not null 
+                && CurrentRoom.Game.GameStarted
+                && !CurrentRoom.Game.GameOver
+                && HubConnection is not null)
+            {
+                await HubConnection.InvokeAsync("MakeMove", CurrentRoom.RoomId, row, col, myPlayerId);
+
+            }
+
+        }
+
+        private bool IsMyTurn()
+        {
+            if(CurrentRoom is not null)
+            {
+                return myPlayerId == CurrentRoom.Game.CurrentPlayerId; ;
+            }
+
+            return false;
+        }
     }
 }

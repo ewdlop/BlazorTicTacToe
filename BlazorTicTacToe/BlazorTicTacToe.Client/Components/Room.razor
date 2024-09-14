@@ -1,10 +1,10 @@
 ﻿<h3>Room</h3>
 
 
-@if(CurrentRoom is not null)
+@if (CurrentRoom is not null)
 {
     <h3>@CurrentRoom.RoomName</h3>
-    if(CurrentRoom.Players.Count < 2)
+    if (CurrentRoom.Players.Count < 2)
     {
         <h4>Waiting for another player to join.</h4>
     }
@@ -14,16 +14,54 @@
         <h4>Waiting for other player to start the game.</h4>
     }
 
-    if((!CurrentRoom.Game.GameStarted || CurrentRoom.Game.GameOver) && CurrentRoom.Game.PlayerXId == myPlayerId && CurrentRoom.Players.Count == 2)
+    if (CurrentRoom.Game.GameOver && !CurrentRoom.Game.IsDraw)
+    {
+        <h4>Game Over! Winner: @CurrentRoom.Game.Winner</h4>
+    }
+
+    if (CurrentRoom.Game.IsDraw)
+    {
+        <h4>Draw!</h4>
+    }
+
+    if ((!CurrentRoom.Game.GameStarted || CurrentRoom.Game.GameOver) && CurrentRoom.Game.PlayerXId == myPlayerId && CurrentRoom.Players.Count == 2)
     {
         <button @onclick="StartGame">Start Game</button>
     }
 
 
-    if(CurrentRoom.Game.GameStarted)
+    if (CurrentRoom.Game.GameStarted)
     {
         <h4>It's @CurrentRoom.Game.CurrentPlayerSymbol's Turn</h4>
 
         <span>Currently Playing: @CurrentRoom.Players[0].Name (X), @CurrentRoom.Players[1].Name (O)</span>
+
+        <table>
+            @for (int row = 0; row < 3; row++)
+            {
+                <tr>
+                    @for (int col = 0; col < 3; col++)
+                    {
+                        var r = row;
+                        var c = col;
+                        <td @onclick="() => MakeMove(r, c)" style="width: 60px;
+                                                            height: 60px;
+                                                            border: 1px solid #000;
+                                                            text-align: center;
+                                                            vertical-align: middle;
+                                                            font-size: 24px;
+                                                            cursor: pointer;">
+                            @CurrentRoom.Game.Board[r][c]
+                        </td>
+                    }
+                </tr>
+            }
+        </table>
+    }
+
+
+    @if (!IsMyTurn() && !CurrentRoom.Game.GameOver)
+    {
+        <p>Please wait for the other player to make their move.</p>
     }
 }
