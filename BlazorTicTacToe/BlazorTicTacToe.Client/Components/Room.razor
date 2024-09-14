@@ -8,4 +8,22 @@
     {
         <h4>Waiting for another player to join.</h4>
     }
+
+    if (!CurrentRoom.Game.GameStarted && CurrentRoom.Game.PlayerXId != myPlayerId && CurrentRoom.Players.Count == 2)
+    {
+        <h4>Waiting for other player to start the game.</h4>
+    }
+
+    if((!CurrentRoom.Game.GameStarted || CurrentRoom.Game.GameOver) && CurrentRoom.Game.PlayerXId == myPlayerId && CurrentRoom.Players.Count == 2)
+    {
+        <button @onclick="StartGame">Start Game</button>
+    }
+
+
+    if(CurrentRoom.Game.GameStarted)
+    {
+        <h4>It's @CurrentRoom.Game.CurrentPlayerSymbol's Turn</h4>
+
+        <span>Currently Playing: @CurrentRoom.Players[0].Name (X), @CurrentRoom.Players[1].Name (O)</span>
+    }
 }
