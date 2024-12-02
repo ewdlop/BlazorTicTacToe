@@ -1,16 +1,17 @@
 ﻿using BlazorTicTacToeShared;
 using Microsoft.AspNetCore.SignalR;
+using System.Collections.Concurrent;
 
 namespace BlazorTicTacToe.Hubs
 {
     public class GameHub : Hub
     {
-        private static readonly List<GameRoom> _rooms = new();
-        public override async Task OnConnectedAsync()
+        private static readonly ConcurrentBag<GameRoom> _rooms = [];
+        public override Task OnConnectedAsync()
         {
             Console.WriteLine($"Player with Id '{Context.ConnectionId}' connected.");
 
-            await Clients.Caller.SendAsync("Rooms", _rooms.OrderBy(r => r.RoomName));
+            return Clients.Caller.SendAsync("Rooms", _rooms.OrderBy(r => r.RoomName));
 
         }
 

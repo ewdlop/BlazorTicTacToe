@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BlazorTicTacToeShared
+﻿namespace BlazorTicTacToeShared
 {
     public class Game
     {
+        private const int TicTacToeBoardSize = 3;
 
         public string? PlayerXId { get; set; }
         public string? PlayerOId { get; set; }
@@ -18,7 +12,7 @@ namespace BlazorTicTacToeShared
         public bool GameOver { get; set; } = false;
         public bool IsDraw{ get; set; } = false;
         public string Winner { get; set; } = string.Empty;
-        public List<List<string>> Board { get; set; } = new List<List<string>>(3);
+        public List<List<string>> Board { get; set; } = new List<List<string>>(TicTacToeBoardSize);
         public Game()
         {
             InitializeBoard();
@@ -37,10 +31,10 @@ namespace BlazorTicTacToeShared
         private void InitializeBoard()
         {
             Board.Clear();
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < TicTacToeBoardSize; i++)
             {
-                var row = new List<string>(3);
-                for (int j = 0; j < 3; j++)
+                var row = new List<string>(TicTacToeBoardSize);
+                for (int j = 0; j < TicTacToeBoardSize; j++)
                 {
                     row.Add(string.Empty);
                 }
@@ -56,7 +50,7 @@ namespace BlazorTicTacToeShared
 
         public bool MakeMove(int row, int col, string playerId)
         {
-            if(playerId != CurrentPlayerId || row < 0 || row >= 3 || col < 0 || col >= 3 || Board[row][col] != String.Empty)
+            if(playerId != CurrentPlayerId || row < 0 || row >= TicTacToeBoardSize || col < 0 || col >= TicTacToeBoardSize || Board[row][col] != String.Empty)
             {
                 return false;
             }
@@ -68,7 +62,7 @@ namespace BlazorTicTacToeShared
 
         public string CheckWinner()
         {
-            for(int i = 0; i < 3; i++)
+            for(int i = 0; i < TicTacToeBoardSize; i++)
             {
                 if (!string.IsNullOrEmpty(Board[i][0]) && Board[i][0] == Board[i][1] && Board[i][1] == Board[i][2])
                 {
@@ -81,7 +75,7 @@ namespace BlazorTicTacToeShared
                 }
             }
 
-            if (!string.IsNullOrEmpty(Board[0][0]) && Board[1][1] == Board[2][2])
+            if (!string.IsNullOrEmpty(Board[0][0]) && Board[0][0] == Board[1][1] && Board[1][1] == Board[2][2])
             {
                 return Board[0][0];
             }

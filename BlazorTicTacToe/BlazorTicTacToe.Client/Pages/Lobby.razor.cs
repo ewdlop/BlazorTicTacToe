@@ -8,11 +8,11 @@ namespace BlazorTicTacToe.Client.Pages
     {
         private HubConnection? _hubConnection;
         [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        public required NavigationManager NavigationManager { get; init; }
         private string _playerName = string.Empty;
         private string _currentRoomName = string.Empty;
         private GameRoom? _currentRoom;
-        private List<GameRoom> _rooms = new();
+        private List<GameRoom> _rooms = [];
 
         protected override async Task OnInitializedAsync()
         {
@@ -48,7 +48,8 @@ namespace BlazorTicTacToe.Client.Pages
             if(joinedRoom is not null)
             {
                 _currentRoom = joinedRoom;
-            } else
+            } 
+            else
             {
                 Console.WriteLine("Room is full or does not exists");
             }

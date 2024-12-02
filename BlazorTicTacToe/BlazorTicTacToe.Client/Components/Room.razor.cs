@@ -13,9 +13,9 @@ namespace BlazorTicTacToe.Client.Components
         [CascadingParameter]
         public HubConnection? HubConnection { get; set; }
 
-        protected override async Task OnInitializedAsync()
+        protected override Task OnInitializedAsync()
         {
-            if (CurrentRoom is null || HubConnection is null || HubConnection.ConnectionId is null) return;
+            if (CurrentRoom is null || HubConnection is null || HubConnection.ConnectionId is null) return Task.CompletedTask;
 
             myPlayerId = HubConnection.ConnectionId; 
             HubConnection.On<Player>("PlayerJoined", player =>
@@ -29,13 +29,15 @@ namespace BlazorTicTacToe.Client.Components
                 CurrentRoom = serverRoom;
                 StateHasChanged();
             });
+
+            return Task.CompletedTask;
         }
 
-        private async Task StartGame()
+        private Task StartGame()
         {
-            if (HubConnection is null || CurrentRoom is null) return;
+            if (HubConnection is null || CurrentRoom is null) return Task.CompletedTask;
 
-            await HubConnection.InvokeAsync("StartGame", CurrentRoom.RoomId);
+            return HubConnection.InvokeAsync("StartGame", CurrentRoom.RoomId);
         }
 
         private async Task MakeMove(int row, int col)
