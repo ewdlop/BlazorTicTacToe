@@ -9,6 +9,8 @@ namespace BlazorTicTacToe.Client.Pages
         private HubConnection? _hubConnection;
         [Inject]
         public required NavigationManager NavigationManager { get; init; }
+        [Inject]
+        public required IGameRoomManager GameRoomManager { get; init; }
         private string _playerName = string.Empty;
         private string _currentRoomName = string.Empty;
         private GameRoom? _currentRoom;
@@ -37,6 +39,13 @@ namespace BlazorTicTacToe.Client.Pages
             _currentRoom = await _hubConnection.InvokeAsync<GameRoom>("CreateRoom", _currentRoomName, _playerName);
             _rooms.Add( _currentRoom );
             await JoinRoom(_currentRoom.RoomId);
+        }
+
+        private void CreateAIRoom()
+        {
+            _currentRoom = GameRoomManager.CreateAIRoom(_playerName);
+            _rooms.Add(_currentRoom);
+            NavigationManager.NavigateTo($"/game/{_currentRoom.RoomId}");
         }
 
         private async Task JoinRoom(string roomId)

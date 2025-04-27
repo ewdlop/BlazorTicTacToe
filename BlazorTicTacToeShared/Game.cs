@@ -93,5 +93,54 @@
         {
             return IsDraw = Board.All(row => row.All(cell => !string.IsNullOrEmpty(cell)));
         }
+
+        /// MinMax algorithm for AI
+        /// isMaximizing indicates whether the current player is the AI (maximizing) or the opponent (minimizing)
+        /// depending on the current player, the algorithm will try to maximize or minimize the score
+        private int MinMax(bool isMaximizing)
+        {
+            // Check for terminal states (win, lose, draw)
+            string winner = CheckWinner();
+            if (winner == "O") return 1; // AI wins
+            if (winner == "X") return -1; // Player wins
+            if (CheckDraw()) return 0; // Draw
+
+            if (isMaximizing)
+            {
+                int maxEval = int.MinValue;
+                for (int i = 0; i < Board.Count; i++)
+                {
+                    for (int j = 0; j < Board[i].Count; j++)
+                    {
+                        if (Board[i][j] == string.Empty)
+                        {
+                            Board[i][j] = "O";
+                            int eval = MinMax(false);
+                            Board[i][j] = string.Empty;
+                            maxEval = Math.Max(maxEval, eval);
+                        }
+                    }
+                }
+                return maxEval;
+            }
+            else
+            {
+                int minEval = int.MaxValue;
+                for (int i = 0; i < Board.Count; i++)
+                {
+                    for (int j = 0; j < Board[i].Count; j++)
+                    {
+                        if (Board[i][j] == string.Empty)
+                        {
+                            Board[i][j] = "X";
+                            int eval = MinMax(true);
+                            Board[i][j] = string.Empty;
+                            minEval = Math.Min(minEval, eval);
+                        }
+                    }
+                }
+                return minEval;
+            }
+        }
     }
 }

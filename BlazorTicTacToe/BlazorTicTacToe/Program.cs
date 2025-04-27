@@ -1,5 +1,6 @@
 using BlazorTicTacToe.Components;
 using BlazorTicTacToe.Hubs;
+using BlazorTicTacToeShared;
 
 namespace BlazorTicTacToe
 {
@@ -14,6 +15,8 @@ namespace BlazorTicTacToe
                 .AddInteractiveWebAssemblyComponents();
 
             builder.Services.AddSignalR();
+
+            builder.Services.AddSingleton<IGameRoomManager, GameRoomManager>();
 
             var app = builder.Build();
 

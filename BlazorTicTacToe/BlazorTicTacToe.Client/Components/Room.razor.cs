@@ -13,6 +13,8 @@ namespace BlazorTicTacToe.Client.Components
         [CascadingParameter]
         public HubConnection? HubConnection { get; set; }
 
+        public string PlayerTurn => IsMyTurn() ? "(Your turn)" : string.Empty;
+
         protected override Task OnInitializedAsync()
         {
             if (CurrentRoom is null || HubConnection is null || HubConnection.ConnectionId is null) return Task.CompletedTask;
