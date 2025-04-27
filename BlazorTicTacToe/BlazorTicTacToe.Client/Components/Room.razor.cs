@@ -8,10 +8,15 @@ namespace BlazorTicTacToe.Client.Components
     {
         private string? myPlayerId;
 
+        [Inject]
+        public required IGameRoomManager GameRoomManager { get; init; }
+
         [Parameter]
         public GameRoom? CurrentRoom { get; set; }
         [CascadingParameter]
         public HubConnection? HubConnection { get; set; }
+
+        public string PlayerTurn => IsMyTurn() ? "(Your turn)" : string.Empty;
 
         protected override Task OnInitializedAsync()
         {
@@ -36,6 +41,12 @@ namespace BlazorTicTacToe.Client.Components
         private Task StartGame()
         {
             if (HubConnection is null || CurrentRoom is null) return Task.CompletedTask;
+            
+            if(CurrentRoom.IsAIRoom)
+            {
+                CurrentRoom.Game.StartGame();
+                return Task.CompletedTask;
+            }
 
             return HubConnection.InvokeAsync("StartGame", CurrentRoom.RoomId);
         }
@@ -49,7 +60,22 @@ namespace BlazorTicTacToe.Client.Components
                 && !CurrentRoom.Game.GameOver
                 && HubConnection is not null)
             {
-                await HubConnection.InvokeAsync("MakeMove", CurrentRoom.RoomId, row, col, myPlayerId);
+                if(CurrentRoom.IsAIRoom)
+                {
+                    if(GameRoomManager.TryMakeMove(CurrentRoom.RoomId, row, col, myPlayerId, out GameRoom? room))
+                    {
+                        (int? aiRow, int? aiCol) = CurrentRoom.Game.MakeAIMove(out string? aiPlayerId);
+                        if (aiRow.HasValue && aiCol.HasValue && !string.IsNullOrWhiteSpace(aiPlayerId))
+                        {
+                            GameRoomManager.TryMakeMove(CurrentRoom.RoomId, aiRow.Value, aiCol.Value, aiPlayerId, out GameRoom? _);
+                        }
+                        StateHasChanged();
+                    }
+                }
+                else
+                {
+                    await HubConnection.InvokeAsync("MakeMove", CurrentRoom.RoomId, row, col, myPlayerId);
+                }
 
             }
 

@@ -4,7 +4,8 @@
     {
         private const int TicTacToeBoardSize = 3;
 
-        public string? PlayerXId { get; set; }
+        public string? PlayerXId { get; 
+            set; }
         public string? PlayerOId { get; set; }
         public string? CurrentPlayerId { get; set; }
         public string CurrentPlayerSymbol => CurrentPlayerId == PlayerXId ? "X" : "O";
@@ -93,5 +94,104 @@
         {
             return IsDraw = Board.All(row => row.All(cell => !string.IsNullOrEmpty(cell)));
         }
+
+        /// MinMax algorithm for AI
+        /// isMaximizing indicates whether the current player is the AI (maximizing) or the opponent (minimizing)
+        /// depending on the current player, the algorithm will try to maximize or minimize the score
+        /// where 1 is a win for AI, -1 is a win for the opponent, and 0 is a draw
+        public int MinMax(bool isMaximizing)
+        {
+            // Check for terminal states (win, lose, draw)
+            string winner = CheckWinner();
+            if (winner == "O") return 1; // AI wins
+            if (winner == "X") return -1; // Player wins
+            if (CheckDraw()) return 0; // Draw
+
+            if (isMaximizing)
+            {
+                int maxEval = int.MinValue;
+                for (int i = 0; i < Board.Count; i++)
+                {
+                    for (int j = 0; j < Board[i].Count; j++)
+                    {
+                        if (Board[i][j] == string.Empty)
+                        {
+                            Board[i][j] = "O";
+                            int eval = MinMax(false);
+                            Board[i][j] = string.Empty;
+                            maxEval = Math.Max(maxEval, eval);
+                        }
+                    }
+                }
+                return maxEval;
+            }
+            else
+            {
+                int minEval = int.MaxValue;
+                for (int i = 0; i < Board.Count; i++)
+                {
+                    for (int j = 0; j < Board[i].Count; j++)
+                    {
+                        if (Board[i][j] == string.Empty)
+                        {
+                            Board[i][j] = "X";
+                            int eval = MinMax(true);
+                            Board[i][j] = string.Empty;
+                            minEval = Math.Min(minEval, eval);
+                        }
+                    }
+                }
+                return minEval;
+            }
+        }
+
+        public (int? row, int? col) GetBestMove()
+        {
+            int bestScore = int.MinValue;
+            int? bestRow = null;
+            int? bestCol = null;
+
+            for (int i = 0; i < Board.Count; i++)
+            {
+                for (int j = 0; j < Board[i].Count; j++)
+                {
+                    if (Board[i][j] == string.Empty)
+                    {
+                        // Simulate the AI move
+                        Board[i][j] = "O";
+                        int score = MinMax(false); // Call MinMax with isMaximizing = false
+                        Board[i][j] = string.Empty; // Undo the move
+
+                        if (score > bestScore)
+                        {
+                            bestScore = score;
+                            bestRow = i;
+                            bestCol = j;
+                        }
+                    }
+                }
+            }
+
+            return (bestRow, bestCol);
+        }
+
+        public (int? row, int? col) MakeAIMove(out string? playerOId)
+        {
+            playerOId = PlayerOId;
+            if (CurrentPlayerId == PlayerOId && !GameOver)
+            {
+                (int? row, int? col) = GetBestMove();
+                if (row.HasValue && col.HasValue)
+                {
+                    return (row, col);
+                }
+                return (null, null);
+            }
+            else
+            {
+                return (null, null);
+            }
+        }
+
     }
 }

@@ -9,11 +9,12 @@
     <input @bind="_playerName" placeholder="Your Name"/>
     <input @bind="_currentRoomName" placeholder="Room Name"/>
     <button @onclick="CreateRoom">Create Room</button>
+    <button @onclick="CreateAIRoom">Create AI Room</button>
 
 
     <h3>Rooms:</h3>
     <ul>
-            @foreach(var r in _rooms)
+            @foreach(var r in GameRoomManager.Rooms)
             {
                 <li>@r.RoomName <span><button @onclick="() => JoinRoom(r.RoomId)">Join</button></span></li>
             }        

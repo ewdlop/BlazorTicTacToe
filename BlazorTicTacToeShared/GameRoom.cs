@@ -4,6 +4,7 @@
     {
         public string RoomId { get; set; } = roomId;
         public string RoomName { get; set; } = roomName;
+        public bool IsAIRoom { get; set; } = false;
 
         public List<Player> Players { get; set; } = [];
         public Game Game { get; set; } = new();
