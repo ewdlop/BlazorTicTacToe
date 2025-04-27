@@ -41,6 +41,12 @@ namespace BlazorTicTacToe.Client.Components
         private Task StartGame()
         {
             if (HubConnection is null || CurrentRoom is null) return Task.CompletedTask;
+            
+            if(CurrentRoom.IsAIRoom)
+            {
+                CurrentRoom.Game.StartGame();
+                return Task.CompletedTask;
+            }
 
             return HubConnection.InvokeAsync("StartGame", CurrentRoom.RoomId);
         }
@@ -58,7 +64,11 @@ namespace BlazorTicTacToe.Client.Components
                 {
                     if(GameRoomManager.TryMakeMove(CurrentRoom.RoomId, row, col, myPlayerId, out GameRoom? room))
                     {
-                        CurrentRoom.Game.MakeAIMove();
+                        (int? aiRow, int? aiCol) = CurrentRoom.Game.MakeAIMove(out string? aiPlayerId);
+                        if (aiRow.HasValue && aiCol.HasValue && !string.IsNullOrWhiteSpace(aiPlayerId))
+                        {
+                            GameRoomManager.TryMakeMove(CurrentRoom.RoomId, aiRow.Value, aiCol.Value, aiPlayerId, out GameRoom? _);
+                        }
                         StateHasChanged();
                     }
                 }

@@ -175,15 +175,21 @@
             return (bestRow, bestCol);
         }
 
-        public void MakeAIMove()
+        public (int? row, int? col) MakeAIMove(out string? playerOId)
         {
+            playerOId = PlayerOId;
             if (CurrentPlayerId == PlayerOId && !GameOver)
             {
-                var (row, col) = GetBestMove();
+                (int? row, int? col) = GetBestMove();
                 if (row.HasValue && col.HasValue)
                 {
-                    MakeMove(row.Value, col.Value, PlayerOId);
+                    return (row, col);
                 }
+                return (null, null);
+            }
+            else
+            {
+                return (null, null);
             }
         }
 
