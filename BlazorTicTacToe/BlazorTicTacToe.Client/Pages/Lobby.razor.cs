@@ -14,7 +14,6 @@ namespace BlazorTicTacToe.Client.Pages
         private string _playerName = string.Empty;
         private string _currentRoomName = string.Empty;
         private GameRoom? _currentRoom;
-        private List<GameRoom> _rooms = [];
 
         protected override async Task OnInitializedAsync()
         {
@@ -25,7 +24,7 @@ namespace BlazorTicTacToe.Client.Pages
             _hubConnection.On<List<GameRoom>>("Rooms", (roomList) =>
             {
                 Console.WriteLine($"We got rooms! Count = {roomList.Count}");
-                _rooms = roomList;
+                GameRoomManager.AddRooms(roomList);
                 StateHasChanged();
             });
 
@@ -37,15 +36,15 @@ namespace BlazorTicTacToe.Client.Pages
             if (_hubConnection is null) return;
 
             _currentRoom = await _hubConnection.InvokeAsync<GameRoom>("CreateRoom", _currentRoomName, _playerName);
-            _rooms.Add( _currentRoom );
             await JoinRoom(_currentRoom.RoomId);
         }
 
         private void CreateAIRoom()
         {
-            _currentRoom = GameRoomManager.CreateAIRoom(_playerName);
-            _rooms.Add(_currentRoom);
-            NavigationManager.NavigateTo($"/game/{_currentRoom.RoomId}");
+            if (_hubConnection is null) return;
+
+            _currentRoom = GameRoomManager.CreateAIRoom(_hubConnection.ConnectionId, _playerName);
+            _currentRoom.Game.StartGame();
         }
 
         private async Task JoinRoom(string roomId)

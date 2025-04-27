@@ -4,7 +4,8 @@
     {
         private const int TicTacToeBoardSize = 3;
 
-        public string? PlayerXId { get; set; }
+        public string? PlayerXId { get; 
+            set; }
         public string? PlayerOId { get; set; }
         public string? CurrentPlayerId { get; set; }
         public string CurrentPlayerSymbol => CurrentPlayerId == PlayerXId ? "X" : "O";
@@ -97,7 +98,8 @@
         /// MinMax algorithm for AI
         /// isMaximizing indicates whether the current player is the AI (maximizing) or the opponent (minimizing)
         /// depending on the current player, the algorithm will try to maximize or minimize the score
-        private int MinMax(bool isMaximizing)
+        /// where 1 is a win for AI, -1 is a win for the opponent, and 0 is a draw
+        public int MinMax(bool isMaximizing)
         {
             // Check for terminal states (win, lose, draw)
             string winner = CheckWinner();
@@ -142,5 +144,48 @@
                 return minEval;
             }
         }
+
+        public (int? row, int? col) GetBestMove()
+        {
+            int bestScore = int.MinValue;
+            int? bestRow = null;
+            int? bestCol = null;
+
+            for (int i = 0; i < Board.Count; i++)
+            {
+                for (int j = 0; j < Board[i].Count; j++)
+                {
+                    if (Board[i][j] == string.Empty)
+                    {
+                        // Simulate the AI move
+                        Board[i][j] = "O";
+                        int score = MinMax(false); // Call MinMax with isMaximizing = false
+                        Board[i][j] = string.Empty; // Undo the move
+
+                        if (score > bestScore)
+                        {
+                            bestScore = score;
+                            bestRow = i;
+                            bestCol = j;
+                        }
+                    }
+                }
+            }
+
+            return (bestRow, bestCol);
+        }
+
+        public void MakeAIMove()
+        {
+            if (CurrentPlayerId == PlayerOId && !GameOver)
+            {
+                var (row, col) = GetBestMove();
+                if (row.HasValue && col.HasValue)
+                {
+                    MakeMove(row.Value, col.Value, PlayerOId);
+                }
+            }
+        }
+
     }
 }

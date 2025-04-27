@@ -22,13 +22,22 @@ namespace BlazorTicTacToeShared
             return room;
         }
 
-        public GameRoom CreateAIRoom(string playerName)
+        public void AddRooms(IEnumerable<GameRoom> rooms)
+        {
+            foreach (var room in rooms)
+            {
+                _rooms.Add(room);
+            }
+        }
+
+        public GameRoom CreateAIRoom(string connecitonId, string playerName)
         {
             GameRoom _currentRoom = new GameRoom(Guid.NewGuid().ToString(), "AI Room");
-            _currentRoom.Game.StartGame();
-            _currentRoom.Game.PlayerXId = "AI";
-            _currentRoom.Game.PlayerOId = playerName;
-            _currentRoom.Game.CurrentPlayerId = "AI";
+            _currentRoom.IsAIRoom = true;
+            string playerId = Guid.NewGuid().ToString();
+            _currentRoom.TryAddPlayer(new Player(connecitonId, playerName));
+            _currentRoom.TryAddPlayer(new Player("AI", "AI"));
+            _rooms.Add(_currentRoom);
             return _currentRoom;
         }
 

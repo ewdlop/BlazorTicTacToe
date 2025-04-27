@@ -8,6 +8,9 @@ namespace BlazorTicTacToe.Client.Components
     {
         private string? myPlayerId;
 
+        [Inject]
+        public required IGameRoomManager GameRoomManager { get; init; }
+
         [Parameter]
         public GameRoom? CurrentRoom { get; set; }
         [CascadingParameter]
@@ -51,7 +54,18 @@ namespace BlazorTicTacToe.Client.Components
                 && !CurrentRoom.Game.GameOver
                 && HubConnection is not null)
             {
-                await HubConnection.InvokeAsync("MakeMove", CurrentRoom.RoomId, row, col, myPlayerId);
+                if(CurrentRoom.IsAIRoom)
+                {
+                    if(GameRoomManager.TryMakeMove(CurrentRoom.RoomId, row, col, myPlayerId, out GameRoom? room))
+                    {
+                        CurrentRoom.Game.MakeAIMove();
+                        StateHasChanged();
+                    }
+                }
+                else
+                {
+                    await HubConnection.InvokeAsync("MakeMove", CurrentRoom.RoomId, row, col, myPlayerId);
+                }
 
             }
 

@@ -1,7 +1,5 @@
-﻿using BlazorTicTacToe.Client.Components;
-using BlazorTicTacToeShared;
+﻿using BlazorTicTacToeShared;
 using Microsoft.AspNetCore.SignalR;
-using System.Collections.Concurrent;
 
 namespace BlazorTicTacToe.Hubs
 {
