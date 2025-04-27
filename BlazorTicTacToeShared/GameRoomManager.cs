@@ -56,10 +56,19 @@ namespace BlazorTicTacToeShared
             return false;
         }
 
+        private static bool IsPlayerTurn(GameRoom room, string playerId)
+        {
+            if(room is not null)
+            {
+                return room.Game.CurrentPlayerId == playerId;
+            }
+            return false;
+        }
+
         public bool TryMakeMove(string roomId, int row, int col, string playerId, out GameRoom? room)
         {
             room = _rooms.FirstOrDefault(r => r.RoomId == roomId);
-            if (room is not null && room.Game.MakeMove(row, col, playerId))
+            if (room is not null && IsPlayerTurn(room, playerId) && room.Game.MakeMove(row, col, playerId))
             {
                 room.Game.Winner = room.Game.CheckWinner();
                 room.Game.IsDraw = room.Game.CheckDraw() && string.IsNullOrEmpty(room.Game.Winner);
