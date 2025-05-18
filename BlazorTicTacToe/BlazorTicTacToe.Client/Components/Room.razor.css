@@ -1,0 +1,132 @@
+.room-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.room-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.room-title {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.waiting-message, .game-result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+.waiting-message {
+    background: #f8f9fa;
+    color: #6c757d;
+}
+
+.game-result.winner {
+    background: #d4edda;
+    color: #155724;
+}
+
+.game-result.draw {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.start-game-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem auto;
+    padding: 0.75rem 1.5rem;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.start-game-btn:hover {
+    background: #0056b3;
+}
+
+.game-info {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.turn-indicator {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.players-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.player {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.vs {
+    color: #6c757d;
+    font-weight: bold;
+}
+
+.game-board {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.game-board table {
+    border-collapse: collapse;
+    background: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.board-cell {
+    width: 80px;
+    height: 80px;
+    border: 2px solid #dee2e6;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.board-cell:hover {
+    background-color: #f8f9fa;
+}
+
+.waiting-turn {
+    text-align: center;
+    color: #6c757d;
+    margin-top: 1rem;
+}
+
+.waiting-turn i {
+    margin-right: 0.5rem;
+}

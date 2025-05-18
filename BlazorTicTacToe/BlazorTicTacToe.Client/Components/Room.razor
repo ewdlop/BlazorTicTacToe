@@ -1,68 +1,98 @@
-﻿<h3>Room</h3>
+﻿@page "/room"
 
-
-@if (CurrentRoom is not null)
-{
-    <h3>@CurrentRoom.RoomName</h3>
-    if (CurrentRoom.Players.Count < 2)
+<div class="room-container">
+    @if (CurrentRoom is not null)
     {
-        <h4>Waiting for another player to join.</h4>
-    }
-
-    if (!CurrentRoom.Game.GameStarted && CurrentRoom.Game.PlayerXId != myPlayerId && CurrentRoom.Players.Count == 2)
-    {
-        <h4>Waiting for other player to start the game.</h4>
-    }
-
-    if (CurrentRoom.Game.GameOver && !CurrentRoom.Game.IsDraw)
-    {
-        <h4>Game Over! Winner: @CurrentRoom.Game.Winner</h4>
-    }
-
-    if (CurrentRoom.Game.IsDraw)
-    {
-        <h4>Draw!</h4>
-    }
-
-    if ((!CurrentRoom.Game.GameStarted || CurrentRoom.Game.GameOver) && CurrentRoom.Game.PlayerXId == myPlayerId && CurrentRoom.Players.Count == 2)
-    {
-        <button @onclick="StartGame">Start Game</button>
-    }
-
-
-    if (CurrentRoom.Game.GameStarted)
-    {
-
-        <h4>It's @CurrentRoom.Game.CurrentPlayerSymbol's@(PlayerTurn) Turn</h4>
-
-        <span>Currently Playing: @CurrentRoom.Players[0].Name (X), @CurrentRoom.Players[1].Name (O)</span>
-
-        <table>
-            @for (int row = 0; row < 3; row++)
+        <div class="room-header">
+            <h2 class="room-title">@CurrentRoom.RoomName</h2>
+            
+            @if (CurrentRoom.Players.Count < 2)
             {
-                <tr>
-                    @for (int col = 0; col < 3; col++)
-                    {
-                        var r = row;
-                        var c = col;
-                        <td @onclick="() => MakeMove(r, c)" style="width: 60px;
-                                                            height: 60px;
-                                                            border: 1px solid #000;
-                                                            text-align: center;
-                                                            vertical-align: middle;
-                                                            font-size: 24px;
-                                                            cursor: pointer;">
-                            @CurrentRoom.Game.Board[r][c]
-                        </td>
-                    }
-                </tr>
+                <div class="waiting-message">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Waiting for another player to join...</span>
+                </div>
             }
-        </table>
-    }
 
+            @if (!CurrentRoom.Game.GameStarted && CurrentRoom.Game.PlayerXId != myPlayerId && CurrentRoom.Players.Count == 2)
+            {
+                <div class="waiting-message">
+                    <i class="fas fa-clock"></i>
+                    <span>Waiting for other player to start the game...</span>
+                </div>
+            }
 
-    @if (!IsMyTurn() && !CurrentRoom.Game.GameOver)
-    {
-        <p>Please wait for the other player to make their move.</p>
+            @if (CurrentRoom.Game.GameOver && !CurrentRoom.Game.IsDraw)
+            {
+                <div class="game-result winner">
+                    <i class="fas fa-trophy"></i>
+                    <span>Game Over! Winner: @CurrentRoom.Game.Winner</span>
+                </div>
+            }
+
+            @if (CurrentRoom.Game.IsDraw)
+            {
+                <div class="game-result draw">
+                    <i class="fas fa-handshake"></i>
+                    <span>It's a Draw!</span>
+                </div>
+            }
+        </div>
+
+        @if ((!CurrentRoom.Game.GameStarted || CurrentRoom.Game.GameOver) && CurrentRoom.Game.PlayerXId == myPlayerId && CurrentRoom.Players.Count == 2)
+        {
+            <button class="start-game-btn" @onclick="StartGame">
+                <i class="fas fa-play"></i>
+                Start Game
+            </button>
+        }
+
+        @if (CurrentRoom.Game.GameStarted)
+        {
+            <div class="game-info">
+                <h3 class="turn-indicator">
+                    <i class="fas fa-user"></i>
+                    It's @CurrentRoom.Game.CurrentPlayerSymbol's@(PlayerTurn) Turn
+                </h3>
+
+                <div class="players-info">
+                    <div class="player">
+                        <i class="fas fa-user"></i>
+                        <span>@CurrentRoom.Players[0].Name (X)</span>
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="player">
+                        <i class="fas fa-user"></i>
+                        <span>@CurrentRoom.Players[1].Name (O)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-board">
+                <table>
+                    @for (int row = 0; row < 3; row++)
+                    {
+                        <tr>
+                            @for (int col = 0; col < 3; col++)
+                            {
+                                var r = row;
+                                var c = col;
+                                <td @onclick="() => MakeMove(r, c)" class="board-cell">
+                                    @CurrentRoom.Game.Board[r][c]
+                                </td>
+                            }
+                        </tr>
+                    }
+                </table>
+            </div>
+        }
+
+        @if (!IsMyTurn() && !CurrentRoom.Game.GameOver)
+        {
+            <div class="waiting-turn">
+                <i class="fas fa-hourglass-half"></i>
+                <p>Please wait for the other player to make their move.</p>
+            </div>
+        }
     }
-}
+</div>
